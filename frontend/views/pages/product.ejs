@@ -1,0 +1,13 @@
+<%- include('partials/header') %>
+<h2>Products</h2>
+<ul>
+  <!-- Loop through products and display them -->
+  <% products.forEach(function(product) { %>
+    <li>
+      <a href="/product/<%= product._id %>"><%= product.name %></a>
+      <p><%= product.description %></p>
+      <p>Price: <%= formatPrice(product.price) %></p>
+    </li>
+  <% }); %>
+</ul>
+<%- include('partials/footer') %>

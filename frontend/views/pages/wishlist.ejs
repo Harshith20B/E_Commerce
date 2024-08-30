@@ -1,0 +1,11 @@
+<%- include('partials/header') %>
+<h2>Your Wishlist</h2>
+<ul>
+  <!-- Loop through wishlist items and display them -->
+  <% wishlist.forEach(function(item) { %>
+    <li>
+      <a href="/product/<%= item.product._id %>"><%= item.product.name %></a>
+    </li>
+  <% }); %>
+</ul>
+<%- include('partials/footer') %>
