@@ -20,14 +20,9 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../frontend/views'));
 
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  tls: true,
-  tlsInsecure: true, // If you're testing and need to bypass SSL issues, use this cautiously
-  tlsAllowInvalidCertificates: true, // This might help with self-signed certificates
-  tlsAllowInvalidHostnames: true // If you're facing hostname mismatches
-});
-
+})
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
 // Utility function to format price
 function formatPrice(price) {
   return `$${(price / 100).toFixed(2)}`;
