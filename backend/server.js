@@ -20,9 +20,12 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../frontend/views'));
 
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true, // This is deprecated and can be removed
-  useUnifiedTopology: true, // This is deprecated and can be removed
-})
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tls: true,
+    tlsAllowInvalidCertificates: true,
+    tlsAllowInvalidHostnames: true
+  })  
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 // Utility function to format price
