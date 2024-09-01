@@ -1,6 +1,11 @@
-<%- include('partials/header') %>
-<h2><%= product.name %></h2>
-<p><%= product.description %></p>
-<p>Price: <%= formatPrice(product.price) %></p>
-<button>Add to Wishlist</button>
-<%- include('partials/footer') %>
+<%- include('../partials/header') %>
+<div class="product-card">
+    <a href="/product/<%= product._id %>" class="product-link"><h3><%= product.name %></h3></a>
+    <p class="product-description"><%= product.description %></p>
+    <p class="product-price">Price: <%= formatPrice(product.price) %></p>
+    <form action="/wishlist/add" method="POST" class="wishlist-form">
+      <input type="hidden" name="productId" value="<%= product._id %>">
+      <button type="submit" class="btn green-btn">Add to Wishlist</button>
+    </form>
+  </div>
+  <%- include('../partials/footer') %>

@@ -1,41 +1,384 @@
 /* Basic styles for the e-commerce website */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  header, footer {
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
-  }
-  
-  header {
-    position: fixed;
-    width: 100%;
-    top: 0;
-  }
-  
-  footer {
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-  }
-  
-  .container {
-    padding: 20px;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url(background.png);
+}
+
+header, footer {
+  background-color: #333;
+  color: #fff;
+}
+
+header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000; /* Ensure header is above other content */
+}
+
+footer {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+.container {
+  padding: 20px;
+  margin-top: 60px; /* Adjust for fixed header */
+  margin-bottom: 40px; /* Adjust for fixed footer */
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Navbar styles */
+.navbar {
+  display: flex;
+  justify-content: space-between; /* Space out brand and other items */
+  align-items: center; /* Vertically center items */
+  font-size: 18px;
+  padding: 0 20px;
+}
+
+.navbar .brand {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.navbar .nav-links a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 25px;
+  font-size: 22px;
+  margin: 0 10px;
+  transition: background-color 0.3s ease;
+}
+.content-center { 
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
+  text-align: center; /* Center text within the elements */
+  color:#fff;
+}
+.navbar .nav-links a:hover {
+  background-color: #555;
+  border-radius: 5px;
+}
+
+.navbar .nav-actions a {
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.navbar .green-btn {
+  background-color: rgb(72, 137, 72);
+}
+
+.navbar .green-btn:hover {
+  background-color: rgb(60, 120, 60);
+}
+
+.navbar .red-btn {
+  background-color: red;
+}
+
+.navbar .red-btn:hover {
+  background-color: darkred;
+}
+
+/* Form container styles */
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form input field styles */
+.form-input {
+  display: block;
+  width: 100%;  
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+/* Enhanced Search bar container styles */
+.search-bar-container {
+  text-align: center;
+  margin-top: 50px; /* Adjust for spacing below the header */
+  margin-bottom: 50px; /* Additional spacing if needed */
+}
+
+/* Enhanced Search form styles */
+.search-form {
+  display: inline-block; /* Center the form */
+  padding: 20px;
+  background-color: #f9f9f9; /* Light background for contrast */
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+/* Larger and more elegant Search input field styles */
+.search-input {
+  padding: 15px;
+  width: 400px; /* Increased width */
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 18px; /* Larger font size */
+  transition: all 0.3s ease; /* Smooth transition for focus effects */
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Glow effect on focus */
+  outline: none;
+}
+
+/* Larger and more visually appealing Search button styles */
+.search-button {
+  padding: 15px 25px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 18px; /* Larger font size */
+  margin-left: 10px; /* Space between input and button */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effects */
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Shadow for depth */
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.search-button:active {
+  transform: translateY(0); /* Reset position on click */
+  box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2); /* Subtle shadow on click */
+}
+
+/* General container styles */
+.container {
+  padding: 20px;
+  margin-top: 60px; /* Adjust for fixed header */
+  margin-bottom: 40px; /* Adjust for fixed footer */
+}
+
+/* Products Section */
+.products-section {
+  margin-bottom: 40px; /* Space between sections */
+}
+
+.products-list {
+  display: flex;
+  flex-wrap: wrap; /* Wrap items if there's not enough space */
+  gap: 20px; /* Space between items */
+}
+
+.product-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: calc(33.333% - 20px); /* Three items per row */
+  box-sizing: border-box;
+}
+
+.product-card h3 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.product-description {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.product-price {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Wishlist Section */
+/* Wishlist Section */
+.wishlist-section {
+  margin-bottom: 40px; /* Space between sections */
+}
+
+.wishlist-items {
+  display: flex;
+  flex-wrap: wrap; /* Wrap items if there's not enough space */
+  gap: 20px; /* Space between items */
+}
+
+.wishlist-item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: calc(33.333% - 20px); /* Three items per row */
+  box-sizing: border-box;
+}
+
+.wishlist-item h3 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.wishlist-description {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.wishlist-price {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* Summary Section */
+.wishlist-summary {
+  display: flex;
+  justify-content: space-between; /* Space between total and button */
+  align-items: center; /* Vertically center items */
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wishlist-total {
+  font-size: 20px;
+}
+
+.wishlist-book-form {
+  margin: 0;
+}
+
+/* Button styles */
+.btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.red-btn {
+  background-color: red;
+}
+
+.red-btn:hover {
+  background-color: darkred;
+}
+
+.green-btn {
+  background-color: rgb(72, 137, 72);
+}
+
+.green-btn:hover {
+  background-color: rgb(60, 120, 60);
+}
+
+
+.btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.green-btn {
+  background-color: rgb(72, 137, 72);
+}
+
+.green-btn:hover {
+  background-color: rgb(60, 120, 60);
+}
+
+/* Button styles */
+.btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.green-btn {
+  background-color: rgb(72, 137, 72);
+}
+
+.green-btn:hover {
+  background-color: rgb(60, 120, 60);
+}
+
+
+
+/* Button styles */
+.btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}

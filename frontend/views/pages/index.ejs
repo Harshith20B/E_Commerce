@@ -1,4 +1,15 @@
-<%- include('partials/header') %>
-<h2>Welcome to our E-Commerce Website!</h2>
-<p>Find the best products at amazing prices.</p>
-<%- include('partials/footer') %>
+<%- include('../partials/header') %>
+
+<div class="content-center">
+    <h2>Welcome to our E-Commerce Website!</h2>
+    <p>Find the best products at amazing prices.</p>
+  </div>
+<!-- Search bar in the middle of the screen -->
+<div class="search-bar-container">
+  <form action="/search" method="get" class="search-form">
+    <input type="text" name="query" placeholder="Search for products..." class="search-input">
+    <button type="submit" class="search-button">Search</button>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

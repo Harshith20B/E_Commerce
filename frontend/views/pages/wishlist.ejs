@@ -1,11 +1,30 @@
-<%- include('partials/header') %>
-<h2>Your Wishlist</h2>
-<ul>
-  <!-- Loop through wishlist items and display them -->
-  <% wishlist.forEach(function(item) { %>
-    <li>
-      <a href="/product/<%= item.product._id %>"><%= item.product.name %></a>
-    </li>
-  <% }); %>
-</ul>
-<%- include('partials/footer') %>
+<%- include('../partials/header') %>
+
+<section class="wishlist-section">
+  <h2 style="color:white">Your Wishlist</h2>
+  <div class="wishlist-items">
+    <% let totalPrice = 0; %> <!-- Initialize total price -->
+    <% wishlist.forEach(function(product) { %>
+      <% totalPrice += product.price; %> <!-- Calculate total price -->
+      <div class="wishlist-item">
+        <h3><a href="/product/<%= product._id %>"><%= product.name %></a></h3>
+        <p class="wishlist-description"><%= product.description %></p>
+        <p class="wishlist-price">Price: <%= formatPrice(product.price) %></p>
+        <form action="/wishlist/remove" method="POST" class="wishlist-remove-form">
+          <input type="hidden" name="productId" value="<%= product._id %>">
+          <button type="submit" class="btn red-btn">Remove from Wishlist</button>
+        </form>
+      </div>
+    <% }); %>
+  </div>
+  <div class="wishlist-summary">
+    <div class="wishlist-total">
+      <h3>Total Price: <%= formatPrice(totalPrice) %></h3>
+    </div>
+    <form action="/book" method="POST" class="wishlist-book-form">
+      <button type="submit" class="btn green-btn">Book Now</button>
+    </form>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

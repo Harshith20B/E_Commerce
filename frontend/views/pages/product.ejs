@@ -1,13 +1,46 @@
-<%- include('partials/header') %>
-<h2>Products</h2>
-<ul>
-  <!-- Loop through products and display them -->
-  <% products.forEach(function(product) { %>
-    <li>
-      <a href="/product/<%= product._id %>"><%= product.name %></a>
-      <p><%= product.description %></p>
-      <p>Price: <%= formatPrice(product.price) %></p>
-    </li>
-  <% }); %>
-</ul>
-<%- include('partials/footer') %>
+<%- include('../partials/header') %>
+
+<section class="products-section">
+  <h2 style="color:white">Products</h2>
+  <div class="products-list">
+    <% products.forEach(function(product) { %>
+      <div class="product-card">
+        <a href="/product/<%= product._id %>" class="product-link"><h3><%= product.name %></h3></a>
+        <p class="product-description"><%= product.description %></p>
+        <p class="product-price">Price: <%= formatPrice(product.price) %></p>
+        <form action="/wishlist/add" method="POST" class="wishlist-form">
+          <input type="hidden" name="productId" value="<%= product._id %>">
+          <button type="submit" class="btn green-btn">Add to Wishlist</button>
+        </form>
+      </div>
+    <% }); %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.wishlist-form').forEach(form => {
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(form);
+        const response = await fetch('/wishlist/add', {
+          method: 'POST',
+          body: new URLSearchParams(formData)
+        });
+
+        const result = await response.json();
+        
+        if (response.status === 401) {
+          alert(result.message); // Alert if user is not authenticated
+        } else if (response.status === 200) {
+          alert(result.message); // Alert on successful addition
+        } else {
+          alert('An error occurred');
+        }
+      });
+    });
+  });
+</script>

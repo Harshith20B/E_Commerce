@@ -19,13 +19,16 @@ app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../frontend/views'));
 
-// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useNewUrlParser: true, // This is deprecated and can be removed
+  useUnifiedTopology: true, // This is deprecated and can be removed
 })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
+// Utility function to format price
+function formatPrice(price) {
+  return `$${(price / 100).toFixed(2)}`;
+}
 
 // Set up session management
 app.use(session({
@@ -42,10 +45,12 @@ function formatPrice(price) {
 
 // Example route for the homepage
 app.get('/', (req, res) => {
-  res.render('pages/index', { title: 'Home' });
+  res.render('pages/index', { 
+    title: 'Home',
+    user: req.session.userId // Pass user information
+  });
 });
 
-// Example route for the products page
 app.get('/products', async (req, res) => {
   try {
     const products = await Product.find();
@@ -53,6 +58,7 @@ app.get('/products', async (req, res) => {
       title: 'Products',
       products: products,
       formatPrice: formatPrice,
+      user: req.session.userId // Pass user information
     });
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -60,6 +66,14 @@ app.get('/products', async (req, res) => {
   }
 });
 
+app.get('/login', (req, res) => {
+  if (req.session.userId) {
+    return res.redirect('/');
+  }
+  res.render('pages/login', { title: 'Login' });
+});
+
+// Ensure other routes pass `user` as well
 // Route to fetch and display product details
 app.get('/product/:id', async (req, res) => {
   const { id } = req.params;
@@ -76,17 +90,12 @@ app.get('/product/:id', async (req, res) => {
       title: 'Product Detail',
       product: product,
       formatPrice: formatPrice,
+      user: req.session.userId // Pass the user ID or user object
     });
   } catch (error) {
     console.error('Error fetching product details:', error);
     res.status(500).send('Server error');
   }
-});
-
-
-// Example route for login page
-app.get('/login', (req, res) => {
-  res.render('pages/login', { title: 'Login' });
 });
 
 // Handle login form submission
@@ -110,6 +119,9 @@ app.post('/login', async (req, res) => {
 
 // Example route for signup page
 app.get('/signup', (req, res) => {
+  if (req.session.userId) {
+    return res.redirect('/');
+  }
   res.render('pages/signup', { title: 'Signup' });
 });
 
@@ -132,22 +144,35 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-// Example route for wishlist page
 app.get('/wishlist', async (req, res) => {
   try {
-    // Fetch the user's wishlist (assumes userId is available, e.g., from session)
-    // Replace with actual user ID from session or authentication mechanism
     const userId = req.session.userId; // Ensure this is set correctly when the user logs in
+    
+    if (!userId) {
+      return res.redirect('/login'); // Redirect to login if the user is not logged in
+    }
+
+    // Fetch the user's wishlist and populate the products field
     const wishlist = await Wishlist.findOne({ userId }).populate('products').exec();
 
     if (!wishlist) {
-      return res.status(404).send('Wishlist not found');
+      return res.render('pages/wishlist', {
+        title: 'Wishlist',
+        wishlist: [],
+        formatPrice: formatPrice, // Ensure this is passed
+        user: userId,
+      });
     }
+
+    // Calculate total price
+    const totalPrice = wishlist.products.reduce((acc, product) => acc + product.price, 0);
 
     res.render('pages/wishlist', {
       title: 'Wishlist',
-      wishlist: wishlist.products,
-      formatPrice: formatPrice,
+      wishlist: wishlist.products, // Pass the populated products array
+      formatPrice: formatPrice, // Ensure this is passed
+      totalPrice: totalPrice, // Pass total price
+      user: userId
     });
   } catch (error) {
     console.error('Error fetching wishlist:', error);
@@ -155,35 +180,38 @@ app.get('/wishlist', async (req, res) => {
   }
 });
 
-
 // Handle adding product to wishlist
 app.post('/wishlist/add', async (req, res) => {
   const { productId } = req.body;
 
   try {
-    // Find the user and add the product to their wishlist
-    const userId = req.session.userId; // Make sure you have user sessions set up
+    const userId = req.session.userId; // Ensure the user is logged in
     if (!userId) {
-      return res.status(401).send('User not authenticated');
+      return res.status(401).json({ message: 'User not authenticated' }); // Send JSON response
     }
 
+    // Check if the wishlist exists for the user
     let wishlist = await Wishlist.findOne({ userId });
+
     if (!wishlist) {
+      // Create a new wishlist if it doesn't exist
       wishlist = new Wishlist({ userId, products: [] });
     }
 
-    // Check if product is already in wishlist
+    // Check if the product is already in the wishlist
     if (!wishlist.products.includes(productId)) {
       wishlist.products.push(productId);
-      await wishlist.save();
+      await wishlist.save(); // Save the updated wishlist to the database
     }
 
-    res.redirect('/wishlist');
+    // Send success response
+    res.json({ message: 'Product added to wishlist' });
   } catch (error) {
     console.error('Error adding product to wishlist:', error);
-    res.status(500).send('Server error');
+    res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 // Handle logging out
 app.get('/logout', (req, res) => {
@@ -195,6 +223,56 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
   });
 });
+
+// Search route to handle product search
+app.get('/search', async (req, res) => {
+  const { query } = req.query;
+
+  try {
+    // Find products that match the search query (case-insensitive)
+    const products = await Product.find({
+      name: { $regex: query, $options: 'i' }
+    });
+
+    res.render('pages/product', {
+      title: `Search results for "${query}"`,
+      products: products,
+      formatPrice: formatPrice,
+      user: req.session.userId // Pass user information
+    });
+  } catch (error) {
+    console.error('Error searching for products:', error);
+    res.status(500).send('Server error');
+  }
+});
+
+// Handle removing product from wishlist
+app.post('/wishlist/remove', async (req, res) => {
+  const { productId } = req.body;
+
+  try {
+    const userId = req.session.userId;
+    if (!userId) {
+      return res.status(401).send('User not authenticated');
+    }
+
+    // Find the wishlist for the user
+    const wishlist = await Wishlist.findOne({ userId });
+
+    if (wishlist) {
+      // Remove the product from the wishlist
+      wishlist.products.pull(productId);
+      await wishlist.save(); // Save the updated wishlist to the database
+    }
+
+    // Redirect back to the wishlist page
+    res.redirect('/wishlist');
+  } catch (error) {
+    console.error('Error removing product from wishlist:', error);
+    res.status(500).send('Server error');
+  }
+});
+
 
 // Start the server
 const PORT = process.env.PORT || 3000;
